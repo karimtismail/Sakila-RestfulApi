@@ -1,0 +1,9 @@
+.idea
+mvnw
+mvnw.cmd
+.mvn
+.vscode
+target/*
+mapstruct.json
+nb-configuration.xml
+.jpb
