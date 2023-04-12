@@ -1,9 +1,9 @@
 package com.iti.sakilaapi.service;
 
-import com.iti.sakilaapi.dto.CategoryDto;
-import com.iti.sakilaapi.entity.Category;
-import com.iti.sakilaapi.repository.implementation.CategoryRepositoryImpl;
-import com.iti.sakilaapi.repository.interfaces.CategoryRepository;
+import com.iti.sakilaapi.presentation.dto.CategoryDto;
+import com.iti.sakilaapi.data.entity.Category;
+import com.iti.sakilaapi.data.repository.implementation.CategoryRepositoryImpl;
+import com.iti.sakilaapi.data.repository.interfaces.CategoryRepository;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;

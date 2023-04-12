@@ -1,9 +1,9 @@
 package com.iti.sakilaapi.service;
 
-import com.iti.sakilaapi.dto.AddressDto;
-import com.iti.sakilaapi.entity.Address;
-import com.iti.sakilaapi.repository.implementation.AddressRepositoryImpl;
-import com.iti.sakilaapi.repository.interfaces.AddressRepository;
+import com.iti.sakilaapi.presentation.dto.AddressDto;
+import com.iti.sakilaapi.data.entity.Address;
+import com.iti.sakilaapi.data.repository.implementation.AddressRepositoryImpl;
+import com.iti.sakilaapi.data.repository.interfaces.AddressRepository;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;

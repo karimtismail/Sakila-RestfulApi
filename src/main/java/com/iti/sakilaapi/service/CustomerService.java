@@ -1,9 +1,9 @@
 package com.iti.sakilaapi.service;
 
-import com.iti.sakilaapi.dto.CustomerDto;
-import com.iti.sakilaapi.entity.Customer;
-import com.iti.sakilaapi.repository.implementation.CustomerRepositoryImpl;
-import com.iti.sakilaapi.repository.interfaces.CustomerRepository;
+import com.iti.sakilaapi.presentation.dto.CustomerDto;
+import com.iti.sakilaapi.data.entity.Customer;
+import com.iti.sakilaapi.data.repository.implementation.CustomerRepositoryImpl;
+import com.iti.sakilaapi.data.repository.interfaces.CustomerRepository;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
