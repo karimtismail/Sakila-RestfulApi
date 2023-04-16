@@ -1,16 +1,16 @@
 package com.iti.sakilaapi.service;
 
-import com.iti.sakilaapi.model.dto.CountryDto;
-import com.iti.sakilaapi.model.entity.Country;
+import com.iti.sakilaapi.model.dto.LanguageDto;
+import com.iti.sakilaapi.model.entity.Language;
 
-public class CountryService extends BaseService<Country, Short, CountryDto> {
+public class LanguageService extends BaseService<Language, Short, LanguageDto> {
     /**
      * Constructs a new BaseService instance.
      *
      * @param entityClass The class of the entity.
      * @param dtoClass    The class of the Data Transfer Object.
      */
-    public CountryService(Class<Country> entityClass, Class<CountryDto> dtoClass) {
+    public LanguageService(Class<Language> entityClass, Class<LanguageDto> dtoClass) {
         super(entityClass, dtoClass);
     }
 }

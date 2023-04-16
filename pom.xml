@@ -148,7 +148,7 @@
                 <configuration>
                     <username>root</username>
                     <password>1234</password>
-                    <url>http://localhost:9191/manager/text</url>
+                    <url>http://localhost:8080/manager/text</url>
                     <path>/sakila-restful</path>
                 </configuration>
             </plugin>

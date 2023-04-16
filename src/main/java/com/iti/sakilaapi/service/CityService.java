@@ -1,52 +1,17 @@
 package com.iti.sakilaapi.service;
 
-import com.iti.sakilaapi.presentation.dto.CityDto;
-import com.iti.sakilaapi.data.entity.City;
-import com.iti.sakilaapi.data.repository.implementation.CityRepositoryImpl;
-import com.iti.sakilaapi.data.repository.interfaces.CityRepository;
-import org.modelmapper.ModelMapper;
+import com.iti.sakilaapi.model.dto.CityDto;
+import com.iti.sakilaapi.model.entity.City;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CityService {
-    private final CityRepository cityRepository;
-    private final ModelMapper modelMapper;
+public class CityService extends BaseService<City, Short, CityDto> {
 
     /**
-     * Constructs a new ActorService instance with a default ActorRepository implementation and a new ModelMapper instance.
+     * Constructs a new BaseService instance.
+     *
+     * @param entityClass The class of the entity.
+     * @param dtoClass    The class of the Data Transfer Object.
      */
-    public CityService() {
-        this.cityRepository = new CityRepositoryImpl();
-        this.modelMapper = new ModelMapper();
-    }
-
-    public CityDto findById(Short cityId) {
-        City city = cityRepository.findById(cityId);
-        return modelMapper.map(city, CityDto.class);
-    }
-
-    public List<CityDto> findAll() {
-        List<City> cities = cityRepository.findAll();
-        List<CityDto> cityDtos = new ArrayList<>();
-        for (City city : cities) {
-            cityDtos.add(modelMapper.map(city, CityDto.class));
-        }
-        return cityDtos;
-    }
-
-    public CityDto save(City city) {
-        City savedCity = cityRepository.save(city);
-        return modelMapper.map(savedCity, CityDto.class);
-    }
-
-    public CityDto update(City city) {
-        City updatedCity = cityRepository.update(city);
-        return modelMapper.map(updatedCity, CityDto.class);
-    }
-
-    public CityDto deleteById(Short cityId) {
-        City deleteCity = cityRepository.deleteById(cityId);
-        return modelMapper.map(deleteCity, CityDto.class);
+    public CityService(Class<City> entityClass, Class<CityDto> dtoClass) {
+        super(entityClass, dtoClass);
     }
 }

@@ -1,16 +1,16 @@
 package com.iti.sakilaapi.service;
 
-import com.iti.sakilaapi.model.dto.CountryDto;
-import com.iti.sakilaapi.model.entity.Country;
+import com.iti.sakilaapi.model.dto.FilmTextDto;
+import com.iti.sakilaapi.model.entity.FilmText;
 
-public class CountryService extends BaseService<Country, Short, CountryDto> {
+public class FilmTextService extends BaseService<FilmText, Short, FilmTextDto> {
     /**
      * Constructs a new BaseService instance.
      *
      * @param entityClass The class of the entity.
      * @param dtoClass    The class of the Data Transfer Object.
      */
-    public CountryService(Class<Country> entityClass, Class<CountryDto> dtoClass) {
+    public FilmTextService(Class<FilmText> entityClass, Class<FilmTextDto> dtoClass) {
         super(entityClass, dtoClass);
     }
 }
