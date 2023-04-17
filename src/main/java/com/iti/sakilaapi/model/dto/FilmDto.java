@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @XmlRootElement
 @NoArgsConstructor
@@ -25,4 +26,11 @@ public class FilmDto implements Serializable {
     private String rating;
     private String specialFeatures;
     private Date lastUpdate;
+    //    private transient List<FilmActorDto> filmActors;
+//    private transient List<FilmCategoryDto> filmCategories;
+//    private transient List<InventoryDto> inventories;
+    private List<FilmActorDto> filmActors;
+    private List<FilmCategoryDto> filmCategories;
+    private List<InventoryDto> inventories;
+
 }

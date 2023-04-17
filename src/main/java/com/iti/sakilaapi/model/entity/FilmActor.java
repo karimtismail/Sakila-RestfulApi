@@ -1,7 +1,7 @@
 package com.iti.sakilaapi.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +10,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -27,14 +26,23 @@ public class FilmActor implements Serializable {
     @MapsId("actorId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "actor_id", nullable = false)
+    @JsonBackReference
     private Actor actor;
 
     @MapsId("filmId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "film_id", nullable = false)
+//    @JsonBackReference
     private Film film;
 
     @Column(name = "last_update", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdate;
+
+    public FilmActor(FilmActorId id, Actor actor, Film film, Date lastUpdate) {
+        this.id = new FilmActorId(actor.getId(), film.getId());
+        this.actor = actor;
+        this.film = film;
+        this.lastUpdate = lastUpdate;
+    }
 }

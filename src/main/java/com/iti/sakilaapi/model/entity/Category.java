@@ -22,6 +22,7 @@ public class Category implements Serializable {
     @Serial
     private static final long serialVersionUID = 1648938034836988303L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id", columnDefinition = "TINYINT UNSIGNED not null")
     private Short id;
 

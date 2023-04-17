@@ -20,6 +20,7 @@ public class FilmText implements Serializable {
     private static final long serialVersionUID = 8424959740296459358L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "film_id", nullable = false)
     private Short id;
 

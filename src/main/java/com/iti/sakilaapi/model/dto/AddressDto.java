@@ -20,4 +20,13 @@ public class AddressDto implements Serializable {
     private String postalCode;
     private String phone;
     private Date lastUpdate;
+
+    public AddressDto(String address, String address2, String district, String postalCode, String phone, Date lastUpdate) {
+        this.address = address;
+        this.address2 = address2;
+        this.district = district;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.lastUpdate = lastUpdate;
+    }
 }

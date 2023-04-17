@@ -23,6 +23,7 @@ public class Language implements Serializable {
     private static final long serialVersionUID = -95848265263623310L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "language_id", columnDefinition = "TINYINT UNSIGNED not null")
     private Short id;
 

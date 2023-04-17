@@ -2,6 +2,7 @@ package com.iti.sakilaapi.service;
 
 import com.iti.sakilaapi.repository.TransactionalEntityManager;
 import com.iti.sakilaapi.repository.implementation.BaseEntityRepositoryImpl;
+import jakarta.ws.rs.NotFoundException;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -87,6 +88,9 @@ public class BaseService<T, ID, D> {
      */
     public D deleteById(ID id) {
         T deleteEntity = repository.deleteById(id);
+        if (deleteEntity == null) {
+            throw new NotFoundException("Not found this id " + id);
+        }
         return mapper.map(deleteEntity, dtoClass);
     }
 }

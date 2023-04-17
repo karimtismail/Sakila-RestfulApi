@@ -64,4 +64,13 @@ public class Address implements Serializable {
     @Column(name = "location", columnDefinition = "GEOMETRY(65535) not null")
     private Object location;
 
+    public Address(Integer id, String address, String address2, String district, String postalCode, String phone, Date lastUpdate) {
+        this.id = id;
+        this.address = address;
+        this.address2 = address2;
+        this.district = district;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.lastUpdate = lastUpdate;
+    }
 }

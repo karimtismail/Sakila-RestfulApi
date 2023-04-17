@@ -19,10 +19,10 @@ public class ActorController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getActorById(@PathParam("id") Short id, @Context UriInfo uriInfo) throws Exception {
+    public Response getActorById(@PathParam("id") Short id, @Context UriInfo uriInfo) {
         ActorDto actorDto = actorService.findById(id);
         if (actorDto == null) {
-            throw new Exception("Actor with ID: " + id + " Not Found");
+            throw new NotFoundException("Actor with ID: " + id + " Not Found");
         }
         Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder()).rel("self").build();
         actorDto.setLinks(Arrays.asList(self));
@@ -57,26 +57,29 @@ public class ActorController {
         return Response.ok(deletedActorDto).build();
     }
 
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response createActor(Actor actor, @Context UriInfo uriInfo) {
-//        ActorDto createdActorDto = actorService.save(actor);
-//
-//        if (createdActorDto == null) {
-//            throw new InternalServerErrorException("Failed to create actor");
-//        }
-//        URI createdActorUri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(createdActorDto.getId())).build();
-//        Link self = Link.fromUriBuilder(UriBuilder.fromUri(createdActorUri)).rel("self").build();
-//        createdActorDto.setLinks(Arrays.asList(self));
-//        return Response.created(createdActorUri).entity(createdActorDto).build();
-//    }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createActor(Actor actor, @Context UriInfo uriInfo) {
+        ActorDto createdActorDto = actorService.save(actor);
+        if (createdActorDto == null) {
+            throw new InternalServerErrorException("Failed to create actor");
+        }
+        Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder()).rel("self").build();
+        createdActorDto.setLinks(Arrays.asList(self));
+        return Response.ok(createdActorDto).build();
+    }
 
-//    @PUT
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response updateActor(Actor actor, @Context UriInfo uriInfo) {
-//        ActorDto updatedActorDto = actorService.update(actor);
-//        Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder()).rel("self").build();
-//        updatedActorDto.setLinks(Arrays.asList(self));
-//        return Response.ok(updatedActorDto).build();
-//    }
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateActor(Actor actor, @Context UriInfo uriInfo) {
+        ActorDto updatedActorDto = actorService.update(actor);
+        if (updatedActorDto == null) {
+            throw new InternalServerErrorException("Failed to update actor");
+        }
+        Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder()).rel("self").build();
+        updatedActorDto.setLinks(Arrays.asList(self));
+        return Response.ok(updatedActorDto).build();
+    }
 }

@@ -26,6 +26,7 @@ public class Staff implements Serializable {
     private static final long serialVersionUID = 3112450445982800587L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id", columnDefinition = "TINYINT UNSIGNED not null")
     private Short id;
 
