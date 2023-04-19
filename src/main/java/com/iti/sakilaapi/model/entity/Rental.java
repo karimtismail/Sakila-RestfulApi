@@ -1,56 +1,51 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.Instant;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "rental", schema = "sakila", indexes = {@Index(name = "idx_fk_inventory_id", columnList = "inventory_id"), @Index(name = "rental_date", columnList = "rental_date, inventory_id, customer_id", unique = true), @Index(name = "idx_fk_staff_id", columnList = "staff_id"), @Index(name = "idx_fk_customer_id", columnList = "customer_id")})
-public class Rental implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -4344783819547775211L;
-
+@Table(name = "rental")
+public class Rental {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rental_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull
     @Column(name = "rental_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date rentalDate;
+    private Instant rentalDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "inventory_id", nullable = false)
     private Inventory inventory;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @Column(name = "return_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date returnDate;
+    private Instant returnDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "staff_id", nullable = false)
     private Staff staff;
 
+    @NotNull
     @Column(name = "last_update", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
-
-    @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL)
-    private List<Payment> payments = new ArrayList<>();
+    private Instant lastUpdate;
 }

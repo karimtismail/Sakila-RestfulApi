@@ -1,76 +1,74 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.Instant;
+import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@RequiredArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "address", schema = "sakila", indexes = {
-        @Index(name = "idx_location", columnList = "location"),
-        @Index(name = "idx_fk_city_id", columnList = "city_id")
-})
-public class Address implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 5401074482617022120L;
+@Table(name = "address")
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id", columnDefinition = "SMALLINT UNSIGNED not null")
-    private Integer id;
+    @Column(name = "address_id")
+    private Integer addressId;
 
-    @Column(name = "address", nullable = false, length = 50)
+    @Column(name = "address")
     private String address;
 
-    @Column(name = "address2", length = 50)
+    @Column(name = "address2")
     private String address2;
 
-    @Column(name = "district", nullable = false, length = 20)
+    @Column(name = "district")
     private String district;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "city_id", nullable = false)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "city_id", referencedColumnName = "city_id", nullable = false)
+    @ToString.Exclude
     private City city;
 
-    @Column(name = "postal_code", length = 10)
+    @Column(name = "postal_code")
     private String postalCode;
 
-    @Column(name = "phone", nullable = false, length = 20)
+    @Column(name = "phone")
     private String phone;
 
-    @Column(name = "last_update", nullable = false)
+    @Column(name = "location", columnDefinition = "geometry")
+    private String location;
+
+    @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
-
-    @OneToMany(mappedBy = "address")
-    private Set<Staff> staff = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "address")
-    private Set<Store> stores = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "address")
-    private Set<Customer> customers = new LinkedHashSet<>();
-
+    private Instant lastUpdate;
+/*
+    TODO [JPA Buddy] create field to map the 'location' column
+     Available actions: Define target Java type | Uncomment as is | Remove column mapping
     @Column(name = "location", columnDefinition = "GEOMETRY(65535) not null")
     private Object location;
+*/
 
-    public Address(Integer id, String address, String address2, String district, String postalCode, String phone, Date lastUpdate) {
-        this.id = id;
-        this.address = address;
-        this.address2 = address2;
-        this.district = district;
-        this.postalCode = postalCode;
-        this.phone = phone;
-        this.lastUpdate = lastUpdate;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Address address = (Address) o;
+        return getAddressId() != null && Objects.equals(getAddressId(), address.getAddressId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

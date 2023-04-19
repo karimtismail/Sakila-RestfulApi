@@ -1,74 +1,83 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.*;
+import org.hibernate.Hibernate;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.Instant;
+import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "staff", schema = "sakila", indexes = {
-        @Index(name = "idx_fk_store_id", columnList = "manager_staff_id"),
-        @Index(name = "idx_fk_address_id", columnList = "address_id")
-})
-public class Staff implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 3112450445982800587L;
-
+@Table(name = "staff")
+public class Staff {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id", columnDefinition = "TINYINT UNSIGNED not null")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short id;
 
+    @Size(max = 45)
+    @NotNull
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
 
+    @Size(max = 45)
+    @NotNull
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
     @Column(name = "picture")
     private byte[] picture;
 
+    @Size(max = 50)
     @Column(name = "email", length = 50)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "manager_staff_id", nullable = false, referencedColumnName = "manager_staff_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
+    @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active = false;
 
+    @Size(max = 16)
+    @NotNull
     @Column(name = "username", nullable = false, length = 16)
     private String username;
 
+    @Size(max = 40)
     @Column(name = "password", length = 40)
     private String password;
 
+    @NotNull
     @Column(name = "last_update", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
+    private Instant lastUpdate;
 
-    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
-    private List<Payment> payments = new ArrayList<>();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Staff staff = (Staff) o;
+        return getId() != null && Objects.equals(getId(), staff.getId());
+    }
 
-    @OneToOne(mappedBy = "managerStaff", cascade = CascadeType.ALL)
-    private Store manager_staff_id_store;
-
-    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
-    private List<Rental> rentals = new ArrayList<>();
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

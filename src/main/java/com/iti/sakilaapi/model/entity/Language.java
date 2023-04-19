@@ -1,43 +1,35 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.Instant;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "language", schema = "sakila")
-public class Language implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -95848265263623310L;
-
+@Table(name = "language")
+public class Language {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "language_id", columnDefinition = "TINYINT UNSIGNED not null")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short id;
 
+    @Size(max = 20)
+    @NotNull
     @Column(name = "name", nullable = false, length = 20)
     private String name;
 
+    @NotNull
     @Column(name = "last_update", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
-
-    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
-    private Set<Film> language_id_films = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "originalLanguage", cascade = CascadeType.ALL)
-    private Set<Film> orifinal_langauge_id_films = new LinkedHashSet<>();
-
+    private Instant lastUpdate;
 }

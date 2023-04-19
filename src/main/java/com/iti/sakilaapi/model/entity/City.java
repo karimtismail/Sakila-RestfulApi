@@ -1,45 +1,50 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.Instant;
+import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@RequiredArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "city", schema = "sakila", indexes = {
-        @Index(name = "idx_fk_country_id", columnList = "country_id")
-})
-public class City implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -1898721468780978445L;
+@Table(name = "city")
+public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "city_id", columnDefinition = "SMALLINT UNSIGNED not null")
-    private Integer id;
+    @Column(name = "city_id")
+    private Integer cityId;
 
-    @Column(name = "city", nullable = false, length = 50)
+    @Column(name = "city")
     private String city;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "country_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "country_id")
     private Country country;
 
-    @Column(name = "last_update", nullable = false)
+    @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
+    private Instant lastUpdate;
 
-    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private Set<Address> addresses = new LinkedHashSet<>();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        City city = (City) o;
+        return getCityId() != null && Objects.equals(getCityId(), city.getCityId());
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -2,6 +2,7 @@ package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +13,15 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 @Embeddable
 public class FilmCategoryId implements Serializable {
     @Serial
-    private static final long serialVersionUID = -2020378987441959681L;
-
+    private static final long serialVersionUID = -7374044723919391724L;
     @Column(name = "film_id", columnDefinition = "SMALLINT UNSIGNED not null")
     private Integer filmId;
 
@@ -32,7 +33,8 @@ public class FilmCategoryId implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         FilmCategoryId entity = (FilmCategoryId) o;
-        return Objects.equals(this.filmId, entity.filmId) && Objects.equals(this.categoryId, entity.categoryId);
+        return Objects.equals(this.filmId, entity.filmId) &&
+                Objects.equals(this.categoryId, entity.categoryId);
     }
 
     @Override

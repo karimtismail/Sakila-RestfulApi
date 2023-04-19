@@ -1,7 +1,7 @@
 package com.iti.sakilaapi.api;
 
-import com.iti.sakilaapi.model.dto.StoreDto;
-import com.iti.sakilaapi.model.entity.Store;
+import com.iti.sakilaapi.model.dto.requests.StoreDTOReq;
+import com.iti.sakilaapi.model.dto.response.StoreDTOResp;
 import com.iti.sakilaapi.service.StoreService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Path("stores")
 public class StoreController {
-    private final StoreService storeService = new StoreService(Store.class, StoreDto.class);
+    private final StoreService storeService = new StoreService();
 
     public StoreController() {
     }
@@ -19,22 +19,22 @@ public class StoreController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStoreById(@PathParam("id") Short id, @Context UriInfo uriInfo) {
-        StoreDto storeDto = storeService.findById(id);
-        if (storeDto == null) {
+    public Response getStoreById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+        StoreDTOResp storeDTOResp = storeService.findById(id);
+        if (storeDTOResp == null) {
             throw new NotFoundException("Store with ID: " + id + " Not Found");
         }
         Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder()).rel("self").build();
-        storeDto.setLinks(Arrays.asList(self));
-        return Response.ok(storeDto).build();
+        storeDTOResp.setLinks(Arrays.asList(self));
+        return Response.ok(storeDTOResp).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllStores(@Context UriInfo uriInfo) {
         try {
-            List<StoreDto> stores = storeService.findAll();
-            for (StoreDto store : stores) {
+            List<StoreDTOResp> stores = storeService.findAll();
+            for (StoreDTOResp store : stores) {
                 Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(String.valueOf(store.getId()))).rel("self").build();
                 store.setLinks(Arrays.asList(self));
             }
@@ -47,8 +47,8 @@ public class StoreController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteStoreById(@PathParam("id") Short id, @Context UriInfo uriInfo) {
-        StoreDto deletedStoreDto = storeService.deleteById(id);
+    public Response deleteStoreById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+        StoreDTOResp deletedStoreDto = storeService.deleteById(id);
         if (deletedStoreDto == null) {
             throw new NotFoundException("Store with ID: " + id + " not found");
         }
@@ -60,8 +60,8 @@ public class StoreController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createStore(Store store, @Context UriInfo uriInfo) {
-        StoreDto createdStoreDto = storeService.save(store);
+    public Response createStore(StoreDTOReq store, @Context UriInfo uriInfo) {
+        StoreDTOResp createdStoreDto = storeService.save(store);
         if (createdStoreDto == null) {
             throw new InternalServerErrorException("Failed to create store");
         }
@@ -71,10 +71,11 @@ public class StoreController {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateStore(Store store, @Context UriInfo uriInfo) {
-        StoreDto updatedStoreDto = storeService.update(store);
+    public Response updateStore(@PathParam("id") Integer id, StoreDTOReq store, @Context UriInfo uriInfo) {
+        StoreDTOResp updatedStoreDto = storeService.update(id, store);
         if (updatedStoreDto == null) {
             throw new InternalServerErrorException("Failed to update store");
         }

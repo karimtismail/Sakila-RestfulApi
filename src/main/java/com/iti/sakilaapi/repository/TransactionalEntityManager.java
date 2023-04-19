@@ -58,7 +58,7 @@ public class TransactionalEntityManager {
             }
         } finally {
             transaction.commit();
-            session.close();
+//            session.close();
         }
     }
 
@@ -82,7 +82,7 @@ public class TransactionalEntityManager {
             }
         } finally {
             transaction.commit();
-            session.close();
+//            session.close();
         }
     }
 

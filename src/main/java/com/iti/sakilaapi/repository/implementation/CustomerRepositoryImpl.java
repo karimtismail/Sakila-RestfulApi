@@ -4,7 +4,7 @@ import com.iti.sakilaapi.model.entity.Customer;
 import com.iti.sakilaapi.repository.TransactionalEntityManager;
 import com.iti.sakilaapi.repository.interfaces.CustomerRepository;
 
-public class CustomerRepositoryImpl extends BaseEntityRepositoryImpl<Customer, Short> implements CustomerRepository {
+public class CustomerRepositoryImpl extends BaseEntityRepositoryImpl<Customer, Integer> implements CustomerRepository {
     public CustomerRepositoryImpl() {
         super(new TransactionalEntityManager(), Customer.class);
     }

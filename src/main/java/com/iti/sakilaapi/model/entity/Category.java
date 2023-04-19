@@ -1,39 +1,34 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-@AllArgsConstructor
-@NoArgsConstructor
+import java.time.Instant;
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "category", schema = "sakila")
-public class Category implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1648938034836988303L;
+@Table(name = "category")
+public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id", columnDefinition = "TINYINT UNSIGNED not null")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short id;
 
+    @Size(max = 25)
+    @NotNull
     @Column(name = "name", nullable = false, length = 25)
     private String name;
 
+    @NotNull
     @Column(name = "last_update", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<FilmCategory> filmCategories = new LinkedHashSet<>();
-
+    private Instant lastUpdate;
 }

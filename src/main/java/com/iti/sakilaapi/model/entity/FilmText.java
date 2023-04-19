@@ -1,29 +1,29 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "film_text", schema = "sakila", indexes = {@Index(name = "idx_title_description", columnList = "title, description")})
-public class FilmText implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 8424959740296459358L;
-
+@Table(name = "film_text")
+public class FilmText {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "film_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short id;
 
+    @Size(max = 255)
+    @NotNull
     @Column(name = "title", nullable = false)
     private String title;
 

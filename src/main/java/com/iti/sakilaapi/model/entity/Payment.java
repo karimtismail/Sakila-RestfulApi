@@ -1,54 +1,51 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.Instant;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "payment", schema = "sakila", indexes = {
-        @Index(name = "idx_fk_staff_id", columnList = "staff_id"),
-        @Index(name = "idx_fk_customer_id", columnList = "customer_id")
-})
-public class Payment implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1030714145295331751L;
-
+@Table(name = "payment")
+public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id", columnDefinition = "SMALLINT UNSIGNED not null")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "staff_id", nullable = false)
     private Staff staff;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rental_id")
     private Rental rental;
 
+    @NotNull
     @Column(name = "amount", nullable = false, precision = 5, scale = 2)
     private BigDecimal amount;
 
+    @NotNull
     @Column(name = "payment_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date paymentDate;
+    private Instant paymentDate;
 
     @Column(name = "last_update")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
+    private Instant lastUpdate;
 }

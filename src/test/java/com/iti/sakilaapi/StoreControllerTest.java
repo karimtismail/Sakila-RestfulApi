@@ -1,9 +1,8 @@
 package com.iti.sakilaapi;
 
-import com.iti.sakilaapi.model.dto.AddressDto;
-import com.iti.sakilaapi.model.dto.StoreDto;
-import com.iti.sakilaapi.model.entity.Address;
-import com.iti.sakilaapi.model.entity.Store;
+import com.iti.sakilaapi.model.dto.response.AddressDTOResp;
+import com.iti.sakilaapi.model.dto.response.StaffDTOResp;
+import com.iti.sakilaapi.model.dto.response.StoreDTOResp;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -11,12 +10,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class StoreControllerTest {
     private static final int HTTP_OK = 200;
     private static final int DELETE_ID = 235;
-    private static final int STORE_ID = 2;
+    private static final int ACTOR_ID = 2;
     private static Client client;
     private final String url = "http://localhost:8080/sakila-restful/webapi/stores";
 
@@ -31,7 +30,7 @@ public class StoreControllerTest {
         // Act
         Response response = client.target(url)
                 .path("{id}")
-                .resolveTemplate("id", STORE_ID)
+                .resolveTemplate("id", ACTOR_ID)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         // Assert
@@ -66,7 +65,11 @@ public class StoreControllerTest {
     @Test
     public void test_Create_Store() {
         // Arrange
-        StoreDto storeDto = new StoreDto(new AddressDto("address1", "address2", "district", "213682", "01532398985", new Date()), new Date());
+        StoreDTOResp storeDto = new StoreDTOResp();
+        storeDto.setLastUpdate(Instant.now());
+        storeDto.setManagerStaff(new StaffDTOResp());
+        storeDto.setAddress(new AddressDTOResp());
+        storeDto.setLastUpdate(Instant.now());
         // Act
         Response response = client.target(url)
                 .request()
@@ -76,19 +79,24 @@ public class StoreControllerTest {
         System.out.println(response.getEntity() + " - id -> " + storeDto.getId());
     }
 
-//    @DisplayName("PUT /stores")
-//    @Test
-//    public void test_Update_Store() {
-//        // Arrange
-//        Store store = new Store(new Address(2, "address1", "address2", "district", "213682", "01532398985", new Date()), new Date());
-//        // Act
-//        Response response = client.target(url)
-//                .request()
-//                .put(Entity.entity(store, MediaType.APPLICATION_JSON));
-//        // Assert
-//        Assertions.assertEquals(HTTP_OK, response.getStatus());
-//        System.out.println(response.getEntity());
-//    }
+    @DisplayName("PUT /stores")
+    @Test
+    public void test_Update_Store() {
+        // Arrange
+        StoreDTOResp storeDto = new StoreDTOResp();
+        storeDto.setId(2);
+        storeDto.setLastUpdate(Instant.now());
+        storeDto.setManagerStaff(new StaffDTOResp());
+        storeDto.setAddress(new AddressDTOResp());
+        storeDto.setLastUpdate(Instant.now());
+        // Act
+        Response response = client.target(url)
+                .request()
+                .put(Entity.entity(storeDto, MediaType.APPLICATION_JSON));
+        // Assert
+        Assertions.assertEquals(HTTP_OK, response.getStatus());
+        System.out.println(response.getEntity());
+    }
 
     @AfterAll
     public static void destroy() {

@@ -1,7 +1,7 @@
 package com.iti.sakilaapi.api;
 
-import com.iti.sakilaapi.model.dto.ActorDto;
-import com.iti.sakilaapi.model.entity.Actor;
+import com.iti.sakilaapi.model.dto.requests.ActorDTOReq;
+import com.iti.sakilaapi.model.dto.response.ActorDTOResp;
 import com.iti.sakilaapi.service.ActorService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Path("actors")
 public class ActorController {
-    private final ActorService actorService = new ActorService(Actor.class, ActorDto.class);
+    private final ActorService actorService = new ActorService();
 
     public ActorController() {
     }
@@ -19,23 +19,23 @@ public class ActorController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getActorById(@PathParam("id") Short id, @Context UriInfo uriInfo) {
-        ActorDto actorDto = actorService.findById(id);
-        if (actorDto == null) {
+    public Response getActorById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+        ActorDTOResp actorDTOResp = actorService.findById(id);
+        if (actorDTOResp == null) {
             throw new NotFoundException("Actor with ID: " + id + " Not Found");
         }
         Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder()).rel("self").build();
-        actorDto.setLinks(Arrays.asList(self));
-        return Response.ok(actorDto).build();
+        actorDTOResp.setLinks(Arrays.asList(self));
+        return Response.ok(actorDTOResp).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllActors(@Context UriInfo uriInfo) {
         try {
-            List<ActorDto> actors = actorService.findAll();
-            for (ActorDto actor : actors) {
-                Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(String.valueOf(actor.getActorId()))).rel("self").build();
+            List<ActorDTOResp> actors = actorService.findAll();
+            for (ActorDTOResp actor : actors) {
+                Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(String.valueOf(actor.getId()))).rel("self").build();
                 actor.setLinks(Arrays.asList(self));
             }
             return Response.ok(actors).build();
@@ -47,8 +47,8 @@ public class ActorController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteActorById(@PathParam("id") Short id, @Context UriInfo uriInfo) {
-        ActorDto deletedActorDto = actorService.deleteById(id);
+    public Response deleteActorById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+        ActorDTOResp deletedActorDto = actorService.deleteById(id);
         if (deletedActorDto == null) {
             throw new NotFoundException("Actor with ID: " + id + " not found");
         }
@@ -60,8 +60,8 @@ public class ActorController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createActor(Actor actor, @Context UriInfo uriInfo) {
-        ActorDto createdActorDto = actorService.save(actor);
+    public Response createActor(ActorDTOReq actor, @Context UriInfo uriInfo) {
+        ActorDTOResp createdActorDto = actorService.save(actor);
         if (createdActorDto == null) {
             throw new InternalServerErrorException("Failed to create actor");
         }
@@ -71,12 +71,13 @@ public class ActorController {
     }
 
     @PUT
+    @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateActor(Actor actor, @Context UriInfo uriInfo) {
-        ActorDto updatedActorDto = actorService.update(actor);
+    public Response updateActor(@PathParam("id") Integer id, ActorDTOReq actorDTOReq, @Context UriInfo uriInfo) {
+        ActorDTOResp updatedActorDto = actorService.update(id, actorDTOReq);
         if (updatedActorDto == null) {
-            throw new InternalServerErrorException("Failed to update actor");
+            throw new InternalServerErrorException("Failed to update actorDTOReq");
         }
         Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder()).rel("self").build();
         updatedActorDto.setLinks(Arrays.asList(self));

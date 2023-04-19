@@ -13,84 +13,114 @@ import java.util.List;
  *
  * @param <T>  The entity class.
  * @param <ID> The entity identifier class.
- * @param <D>  The Data Transfer Object class.
+ * @param <DR> The Data Transfer Object class for requests.
+ * @param <DS> The Data Transfer Object class for responses.
  */
-public class BaseService<T, ID, D> {
+public class BaseService<T, ID, DR, DS> {
 
     private final BaseEntityRepositoryImpl<T, ID> repository;
     private final ModelMapper mapper;
-    private final Class<D> dtoClass;
+    private final Class<DR> dtoClassRequest;
+    private final Class<DS> dtoClassResponse;
+    private final TransactionalEntityManager transactionalEntityManager;
 
     /**
      * Constructs a new BaseService instance.
      *
-     * @param entityClass The class of the entity.
-     * @param dtoClass    The class of the Data Transfer Object.
+     * @param entityClass      The class of the entity.
+     * @param dtoClassRequest  The class of the Data Transfer Object for requests.
+     * @param dtoClassResponse The class of the Data Transfer Object for responses.
      */
-    public BaseService(Class<T> entityClass, Class<D> dtoClass) {
-        this.dtoClass = dtoClass;
+    public BaseService(Class<T> entityClass, Class<DR> dtoClassRequest, Class<DS> dtoClassResponse) {
+        this.dtoClassRequest = dtoClassRequest;
+        this.dtoClassResponse = dtoClassResponse;
         this.repository = new BaseEntityRepositoryImpl<>(new TransactionalEntityManager(), entityClass);
         this.mapper = new ModelMapper();
+        this.transactionalEntityManager = new TransactionalEntityManager();
     }
 
     /**
-     * Finds the entity with the specified identifier and returns its corresponding Data Transfer Object.
+     * Finds the entity with the specified identifier and returns its corresponding Data Transfer Object for response.
      *
      * @param id The identifier of the entity to find.
-     * @return The corresponding Data Transfer Object.
+     * @return The corresponding Data Transfer Object for response.
      */
-    public D findById(ID id) {
-        T entity = repository.findById(id);
-        return mapper.map(entity, dtoClass);
+    public DS findById(ID id) {
+        return transactionalEntityManager.executeInTransaction(entityManager -> {
+            T entity = repository.findById(id, entityManager);
+            return mapper.map(entity, dtoClassResponse);
+        });
     }
 
     /**
-     * Finds all entities and returns their corresponding Data Transfer Objects.
+     * Finds all entities and returns their corresponding Data Transfer Objects for response.
      *
-     * @return The list of corresponding Data Transfer Objects.
+     * @return The list of corresponding Data Transfer Objects for response.
      */
-    public List<D> findAll() {
-        List<T> entities = repository.findAll();
-        List<D> dto = new ArrayList<>();
-        for (T entity : entities) {
-            dto.add(mapper.map(entity, dtoClass));
-        }
-        return dto;
+    public List<DS> findAll() {
+        return transactionalEntityManager.executeInTransaction(entityManager -> {
+            List<T> entities = repository.findAll(entityManager);
+            List<DS> dto = new ArrayList<>();
+            for (T entity : entities) {
+                dto.add(mapper.map(entity, dtoClassResponse));
+            }
+            return dto;
+        });
     }
 
     /**
-     * Saves the specified entity and returns its corresponding Data Transfer Object.
+     * Saves the specified entity and returns its corresponding Data Transfer Object for response.
      *
-     * @param entity The entity to save.
-     * @return The corresponding Data Transfer Object.
+     * @param dtoRequest The Data Transfer Object for request.
+     * @return The corresponding Data Transfer Object for response.
      */
-    public D save(T entity) {
+    public DS save(DR dtoRequest) {
+        T entity = mapper.map(dtoRequest, repository.getEntityClass());
         T savedEntity = repository.save(entity);
-        return mapper.map(savedEntity, dtoClass);
+        return mapper.map(savedEntity, dtoClassResponse);
     }
 
     /**
-     * Updates the specified entity and returns its corresponding Data Transfer Object.
+     * Updates the entity with the specified identifier using the provided DTO request object
+     * and returns its corresponding Data Transfer Object for response.
      *
-     * @param entity The entity to update.
-     * @return The corresponding Data Transfer Object.
+     * @param id         The identifier of the entity to update.
+     * @param dtoRequest The Data Transfer Object for request that contains the updates to be made to the entity.
+     * @return The corresponding Data Transfer Object for response.
+     * @throws NotFoundException        if the entity with the specified identifier is not found.
+     * @throws IllegalArgumentException if the provided DTO request object is null.
      */
-    public D update(T entity) {
-        T updatedEntity = repository.update(entity);
-        return mapper.map(updatedEntity, dtoClass);
+    public DS update(ID id, DR dtoRequest) {
+        if (dtoRequest == null) {
+            throw new IllegalArgumentException("DTO request cannot be null");
+        }
+        var entityTrans = transactionalEntityManager.executeInTransaction(
+                entityManager -> repository.findById(id, entityManager)
+        );
+        if (entityTrans == null) {
+            throw new NotFoundException("Entity not found with id: " + id);
+        }
+        mapper.map(dtoRequest, entityTrans);
+        T updatedEntity = repository.update(entityTrans);
+        return mapper.map(updatedEntity, dtoClassResponse);
     }
 
     /**
-     * Deletes the entity with the specified identifier and returns its corresponding Data Transfer Object.
+     * Deletes the entity with the specified identifier and returns its corresponding Data Transfer Object for response.
      *
      * @param id The identifier of the entity to delete.
-     * @return The corresponding Data Transfer Object.
+     * @return The corresponding Data Transfer Object for response.
+     * @throws NotFoundException if the entity with the specified identifier is not found.
      */
-    public D deleteById(ID id) {
-        T deleteEntity = repository.deleteById(id);
-        if (deleteEntity == null) {
-            throw new NotFoundException("Not found this id " + id);
+    public DS deleteById(ID id) {
+
+        var entityTrans = transactionalEntityManager.executeInTransaction(
+                entityManager -> repository.findById(id, entityManager)
+        );
+        if (entityTrans == null) {
+            throw new NotFoundException("Entity not found with id: " + id);
         }
-        return mapper.map(deleteEntity, dtoClass);
+        repository.delete(entityTrans);
+        return mapper.map(entityTrans, dtoClassResponse);
     }
 }

@@ -1,67 +1,61 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.time.Instant;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "customer", schema = "sakila", indexes = {
-        @Index(name = "idx_last_name", columnList = "last_name"),
-        @Index(name = "idx_fk_store_id", columnList = "store_id"),
-        @Index(name = "idx_fk_address_id", columnList = "address_id")
-})
-public class Customer implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1036565202671449409L;
+@Table(name = "customer")
+public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id", columnDefinition = "SMALLINT UNSIGNED not null")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
+    @Size(max = 45)
+    @NotNull
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
 
+    @Size(max = 45)
+    @NotNull
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
 
+    @Size(max = 50)
     @Column(name = "email", length = 50)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
+    @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active = false;
 
+    @NotNull
     @Column(name = "create_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+    private Instant createDate;
 
     @Column(name = "last_update")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
-
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<Payment> payments = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<Rental> rentals = new LinkedHashSet<>();
-
+    private Instant lastUpdate;
 }

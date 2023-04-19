@@ -2,24 +2,24 @@ package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Embeddable
 @Getter
 @Setter
-@Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
+@XmlRootElement
 public class FilmActorId implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1170478209906291036L;
+    private static final long serialVersionUID = -8553192601213502919L;
     @Column(name = "actor_id", columnDefinition = "SMALLINT UNSIGNED not null")
     private Integer actorId;
 
@@ -31,7 +31,8 @@ public class FilmActorId implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         FilmActorId entity = (FilmActorId) o;
-        return Objects.equals(this.actorId, entity.actorId) && Objects.equals(this.filmId, entity.filmId);
+        return Objects.equals(this.actorId, entity.actorId) &&
+                Objects.equals(this.filmId, entity.filmId);
     }
 
     @Override

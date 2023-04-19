@@ -1,54 +1,53 @@
 package com.iti.sakilaapi.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.*;
+import org.hibernate.Hibernate;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.Instant;
+import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@ToString
+@RequiredArgsConstructor
+@XmlRootElement
 @Entity
-@Table(name = "actor", schema = "sakila", indexes = {
-        @Index(name = "idx_actor_last_name", columnList = "last_name")
-})
-public class Actor implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -1136385676474999212L;
+@Table(name = "actor")
+public class Actor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "actor_id", columnDefinition = "SMALLINT UNSIGNED not null")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Size(max = 45)
+    @NotNull
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
 
+    @Size(max = 45)
+    @NotNull
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
 
+    @NotNull
     @Column(name = "last_update", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
+    private Instant lastUpdate;
 
-    @OneToMany(mappedBy = "actor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<FilmActor> films = new ArrayList<>();
-
-    public Actor(String firstName, String lastName, Date lastUpdate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.lastUpdate = lastUpdate;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Actor actor = (Actor) o;
+        return getId() != null && Objects.equals(getId(), actor.getId());
     }
 
-    public Actor(Integer id, String firstName, String lastName, Date lastUpdate) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.lastUpdate = lastUpdate;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
