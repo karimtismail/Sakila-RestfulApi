@@ -1,15 +1,11 @@
-//package com.iti.sakilaapi.service;
-//
-//import com.iti.sakilaapi.model.entity.Inventory;
-//
-//public class InventoryService extends BaseService<Inventory, Short, InventoryDto> {
-//    /**
-//     * Constructs a new BaseService instance.
-//     *
-//     * @param entityClass The class of the entity.
-//     * @param dtoClass    The class of the Data Transfer Object.
-//     */
-//    public InventoryService(Class<Inventory> entityClass, Class<InventoryDto> dtoClass) {
-//        super(entityClass, dtoClass);
-//    }
-//}
+package com.iti.sakilaapi.service;
+
+import com.iti.sakilaapi.model.dto.requests.InventoryDTOReq;
+import com.iti.sakilaapi.model.dto.response.InventoryDTOResp;
+import com.iti.sakilaapi.model.entity.Inventory;
+
+public class InventoryService extends BaseService<Inventory, Integer, InventoryDTOReq, InventoryDTOResp> {
+    public InventoryService() {
+        super(Inventory.class, InventoryDTOReq.class, InventoryDTOResp.class);
+    }
+}

@@ -1,8 +1,6 @@
 package com.iti.sakilaapi;
 
-import com.iti.sakilaapi.model.dto.response.AddressDTOResp;
-import com.iti.sakilaapi.model.dto.response.StaffDTOResp;
-import com.iti.sakilaapi.model.dto.response.StoreDTOResp;
+import com.iti.sakilaapi.model.dto.response.CategoryDTOResp;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -10,25 +8,22 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
 
-import java.time.Instant;
-
-public class StoreControllerTest {
+public class CategoryControllerTest {
     private static final int HTTP_OK = 200;
     private static final int DELETE_ID = 235;
-    private static final int UPDATE_ID = 230;
-
+    private static final int UPDATE_ID = 19;
     private static final int GET_BY_ID = 2;
     private static Client client;
-    private final String url = "http://localhost:8080/sakila-restful/webapi/stores";
+    private final String url = "http://localhost:8080/sakila-restful/webapi/categories";
 
     @BeforeAll
     public static void setUp() {
         client = ClientBuilder.newClient();
     }
 
-    @DisplayName("GET /stores/{id}")
+    @DisplayName("GET /categories/{id}")
     @Test
-    public void test_Get_Store_By_Id() {
+    public void test_Get_Category_By_Id() {
         // Act
         Response response = client.target(url)
                 .path("{id}")
@@ -39,21 +34,20 @@ public class StoreControllerTest {
         Assertions.assertEquals(HTTP_OK, response.getStatus());
     }
 
-    @DisplayName("GET /stores")
+    @DisplayName("GET /categories")
     @Test
-    public void test_Get_All_Stores() {
+    public void test_Get_All_Categorys() {
         // Act
         Response response = client.target(url)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         // Assert
         Assertions.assertEquals(HTTP_OK, response.getStatus());
-        response.close();
     }
 
-    @DisplayName("DELETE /stores/{id}")
+    @DisplayName("DELETE /categories/{id}")
     @Test
-    public void test_Delete_Store_By_Id() {
+    public void test_Delete_Category_By_Id() {
         // Act
         Response response = client.target(url)
                 .path("{id}")
@@ -62,43 +56,35 @@ public class StoreControllerTest {
                 .delete();
         // Assert
         Assertions.assertEquals(HTTP_OK, response.getStatus());
-        response.close();
     }
 
-    @DisplayName("POST /stores")
+    @DisplayName("POST /categories")
     @Test
-    public void test_Create_Store() {
+    public void test_Create_Category() {
         // Arrange
-        StoreDTOResp storeDto = new StoreDTOResp();
-        storeDto.setLastUpdate(Instant.now());
-        storeDto.setManagerStaff(new StaffDTOResp());
-        storeDto.setAddress(new AddressDTOResp());
-        storeDto.setLastUpdate(Instant.now());
+        CategoryDTOResp categoryDto = new CategoryDTOResp();
+        categoryDto.setName("category 1");
         // Act
         Response response = client.target(url)
                 .request()
-                .post(Entity.entity(storeDto, MediaType.APPLICATION_JSON));
+                .post(Entity.entity(categoryDto, MediaType.APPLICATION_JSON));
         // Assert
         Assertions.assertEquals(HTTP_OK, response.getStatus());
-        System.out.println(response.getEntity() + " - id -> " + storeDto.getId());
-        response.close();
+        System.out.println(response.getEntity() + " - id -> " + categoryDto.getId());
     }
 
-    @DisplayName("PUT /stores")
+    @DisplayName("PUT /categories")
     @Test
-    public void test_Update_Store() {
+    public void test_Update_Category() {
         // Arrange
-        StoreDTOResp storeDto = new StoreDTOResp();
-        storeDto.setLastUpdate(Instant.now());
-        storeDto.setManagerStaff(new StaffDTOResp());
-        storeDto.setAddress(new AddressDTOResp());
-        storeDto.setLastUpdate(Instant.now());
+        CategoryDTOResp categoryDto = new CategoryDTOResp();
+        categoryDto.setName("Travell");
         // Act
         Response response = client.target(url)
                 .path("{id}")
                 .resolveTemplate("id", UPDATE_ID)
                 .request()
-                .put(Entity.entity(storeDto, MediaType.APPLICATION_JSON));
+                .put(Entity.entity(categoryDto, MediaType.APPLICATION_JSON));
         // Assert
         Assertions.assertEquals(HTTP_OK, response.getStatus());
         System.out.println(response.getEntity());

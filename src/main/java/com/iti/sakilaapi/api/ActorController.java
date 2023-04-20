@@ -6,12 +6,14 @@ import com.iti.sakilaapi.service.ActorService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
 @Path("actors")
 public class ActorController {
     private final ActorService actorService = new ActorService();
+    private @Context UriInfo uriInfo;
 
     public ActorController() {
     }
@@ -19,7 +21,7 @@ public class ActorController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getActorById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+    public Response getActorById(@PathParam("id") Integer id) {
         ActorDTOResp actorDTOResp = actorService.findById(id);
         if (actorDTOResp == null) {
             throw new NotFoundException("Actor with ID: " + id + " Not Found");
@@ -31,7 +33,7 @@ public class ActorController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllActors(@Context UriInfo uriInfo) {
+    public Response getAllActors() {
         try {
             List<ActorDTOResp> actors = actorService.findAll();
             for (ActorDTOResp actor : actors) {
@@ -47,7 +49,7 @@ public class ActorController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteActorById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+    public Response deleteActorById(@PathParam("id") Integer id) {
         ActorDTOResp deletedActorDto = actorService.deleteById(id);
         if (deletedActorDto == null) {
             throw new NotFoundException("Actor with ID: " + id + " not found");
@@ -60,7 +62,8 @@ public class ActorController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createActor(ActorDTOReq actor, @Context UriInfo uriInfo) {
+    public Response createActor(ActorDTOReq actor) {
+        actor.setLastUpdate(Instant.now());
         ActorDTOResp createdActorDto = actorService.save(actor);
         if (createdActorDto == null) {
             throw new InternalServerErrorException("Failed to create actor");
@@ -74,7 +77,8 @@ public class ActorController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateActor(@PathParam("id") Integer id, ActorDTOReq actorDTOReq, @Context UriInfo uriInfo) {
+    public Response updateActor(@PathParam("id") Integer id, ActorDTOReq actorDTOReq) {
+        actorDTOReq.setLastUpdate(Instant.now());
         ActorDTOResp updatedActorDto = actorService.update(id, actorDTOReq);
         if (updatedActorDto == null) {
             throw new InternalServerErrorException("Failed to update actorDTOReq");

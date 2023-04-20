@@ -6,12 +6,14 @@ import com.iti.sakilaapi.service.AddressService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
 @Path("addresses")
 public class AddressController {
     private final AddressService addressService = new AddressService();
+    private @Context UriInfo uriInfo;
 
     public AddressController() {
     }
@@ -19,7 +21,7 @@ public class AddressController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAddressById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+    public Response getAddressById(@PathParam("id") Integer id) {
         AddressDTOResp addressDTOResp = addressService.findById(id);
         if (addressDTOResp == null) {
             throw new NotFoundException("Address with ID: " + id + " Not Found");
@@ -31,14 +33,14 @@ public class AddressController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAddresss(@Context UriInfo uriInfo) {
+    public Response getAllAddresses() {
         try {
-            List<AddressDTOResp> addresss = addressService.findAll();
-            for (AddressDTOResp address : addresss) {
+            List<AddressDTOResp> addresses = addressService.findAll();
+            for (AddressDTOResp address : addresses) {
                 Link self = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(String.valueOf(address.getId()))).rel("self").build();
                 address.setLinks(Arrays.asList(self));
             }
-            return Response.ok(addresss).build();
+            return Response.ok(addresses).build();
         } catch (Exception ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -47,7 +49,7 @@ public class AddressController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAddressById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+    public Response deleteAddressById(@PathParam("id") Integer id) {
         AddressDTOResp deletedAddressDto = addressService.deleteById(id);
         if (deletedAddressDto == null) {
             throw new NotFoundException("Address with ID: " + id + " not found");
@@ -60,7 +62,8 @@ public class AddressController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createAddress(AddressDTOReq address, @Context UriInfo uriInfo) {
+    public Response createAddress(AddressDTOReq address) {
+        address.setLastUpdate(Instant.now());
         AddressDTOResp createdAddressDto = addressService.save(address);
         if (createdAddressDto == null) {
             throw new InternalServerErrorException("Failed to create address");
@@ -74,7 +77,8 @@ public class AddressController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateAddress(@PathParam("id") Integer id, AddressDTOReq address, @Context UriInfo uriInfo) {
+    public Response updateAddress(@PathParam("id") Integer id, AddressDTOReq address) {
+        address.setLastUpdate(Instant.now());
         AddressDTOResp updatedAddressDto = addressService.update(id, address);
         if (updatedAddressDto == null) {
             throw new InternalServerErrorException("Failed to update address");

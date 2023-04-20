@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -19,4 +20,5 @@ public class StaffDTOReq implements Serializable {
     private Boolean active;
     private String username;
     private String password;
+    private Instant lastUpdate;
 }

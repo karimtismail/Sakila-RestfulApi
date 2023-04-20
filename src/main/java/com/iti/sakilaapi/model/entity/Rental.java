@@ -28,12 +28,12 @@ public class Rental {
     private Instant rentalDate;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "inventory_id", nullable = false)
     private Inventory inventory;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
@@ -41,7 +41,7 @@ public class Rental {
     private Instant returnDate;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "staff_id", nullable = false)
     private Staff staff;
 

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +16,6 @@ public class CustomerDTOReq implements Serializable {
     private String lastName;
     private String email;
     private String address;
+    private Instant createDate;
+    private Instant lastUpdate;
 }

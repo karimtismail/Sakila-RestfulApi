@@ -21,7 +21,7 @@ public class Category {
     @Id
     @Column(name = "category_id", columnDefinition = "TINYINT UNSIGNED not null")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short id;
+    private Integer id;
 
     @Size(max = 25)
     @NotNull

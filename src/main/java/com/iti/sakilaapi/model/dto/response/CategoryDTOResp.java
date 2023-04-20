@@ -1,10 +1,15 @@
 package com.iti.sakilaapi.model.dto.response;
 
+import jakarta.ws.rs.core.Link;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,7 +17,8 @@ import java.time.Instant;
 @AllArgsConstructor
 @XmlRootElement
 public class CategoryDTOResp implements Serializable {
-    private Short id;
+    private Integer id;
     private String name;
     private Instant lastUpdate;
+    private List<Link> links;
 }

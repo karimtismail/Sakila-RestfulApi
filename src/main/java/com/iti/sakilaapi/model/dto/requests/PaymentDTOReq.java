@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +16,6 @@ public class PaymentDTOReq implements Serializable {
     private String staffFirstName;
     private Integer rentalId;
     private BigDecimal amount;
+    private Instant paymentDate;
+    private Instant lastUpdate;
 }

@@ -5,16 +5,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
 @XmlRootElement
 public class CityDTOReq implements Serializable {
     private String city;
-    private CountryDTOReq country;
+    private Integer countryId;
+    private Instant lastUpdate;
 
-    public CityDTOReq(String city, CountryDTOReq country) {
+    public CityDTOReq(String city, Integer countryId) {
         this.city = city;
-        this.country = country;
+        this.countryId = countryId;
     }
 }

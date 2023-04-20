@@ -5,10 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
 @XmlRootElement
 public class CategoryDTOReq implements Serializable {
     private String name;
+    private Instant lastUpdate;
 }

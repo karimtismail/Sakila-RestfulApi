@@ -1,6 +1,5 @@
 package com.iti.sakilaapi.model.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.ws.rs.core.Link;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
@@ -19,9 +18,7 @@ import java.util.List;
 @XmlRootElement
 public class StoreDTOResp implements Serializable {
     private Integer id;
-//    @JsonProperty
     private StaffDTOResp managerStaff;
-//    @JsonProperty
     private AddressDTOResp address;
     private Instant lastUpdate;
     private List<Link> links;

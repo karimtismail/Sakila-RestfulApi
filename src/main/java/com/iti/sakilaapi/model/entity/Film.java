@@ -38,11 +38,11 @@ public class Film {
     private Integer releaseYear;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "language_id", nullable = false)
     private Language language;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "original_language_id")
     private Language originalLanguage;
 

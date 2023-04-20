@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -14,12 +15,13 @@ public class FilmDTOReq implements Serializable {
     private String title;
     private String description;
     private Integer releaseYear;
-    private String language;//Language
-    private String originalLanguage;//Language
+    private Integer languageId;
+    private String originalLanguage;
     private Short rentalDuration;
     private BigDecimal rentalRate;
     private Integer length;
     private BigDecimal replacementCost;
     private String rating;
     private String specialFeatures;
+    private Instant lastUpdate;
 }

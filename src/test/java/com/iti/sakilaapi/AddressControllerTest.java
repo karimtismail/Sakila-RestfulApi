@@ -9,12 +9,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.*;
 
-import java.time.Instant;
-
 public class AddressControllerTest {
     private static final int HTTP_OK = 200;
-    private static final int DELETE_ID = 230;
-    private static final int ACTOR_ID = 2;
+    private static final int DELETE_ID = 232;
+    private static final int UPDATE_ID = 243;
+    private static final int GET_BY_ID = 2;
     private static Client client;
     private final String url = "http://localhost:8080/sakila-restful/webapi/addresses";
 
@@ -29,7 +28,7 @@ public class AddressControllerTest {
         // Act
         Response response = client.target(url)
                 .path("{id}")
-                .resolveTemplate("id", ACTOR_ID)
+                .resolveTemplate("id", GET_BY_ID)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         // Assert
@@ -71,7 +70,6 @@ public class AddressControllerTest {
         addressDto.setCity(new CityDTOResp());
         addressDto.setPostalCode("12345");
         addressDto.setPhone("555-5555");
-        addressDto.setLastUpdate(Instant.now());
         // Act
         Response response = client.target(url)
                 .request()
@@ -79,6 +77,7 @@ public class AddressControllerTest {
         // Assert
         Assertions.assertEquals(HTTP_OK, response.getStatus());
         System.out.println(response.getEntity() + " - id -> " + addressDto.getId());
+        response.close();
     }
 
     @DisplayName("PUT /addresses")
@@ -86,21 +85,22 @@ public class AddressControllerTest {
     public void test_Update_Address() {
         // Arrange
         AddressDTOResp addressDto = new AddressDTOResp();
-        addressDto.setId(605);
         addressDto.setAddress("123 Main St");
         addressDto.setAddress2("Apt 4");
         addressDto.setDistrict("Downtown");
         addressDto.setCity(new CityDTOResp());
         addressDto.setPostalCode("12345");
         addressDto.setPhone("555-5555");
-        addressDto.setLastUpdate(Instant.now());
         // Act
         Response response = client.target(url)
+                .path("{id}")
+                .resolveTemplate("id", UPDATE_ID)
                 .request()
                 .put(Entity.entity(addressDto, MediaType.APPLICATION_JSON));
         // Assert
         Assertions.assertEquals(HTTP_OK, response.getStatus());
         System.out.println(response.getEntity());
+        response.close();
     }
 
     @AfterAll

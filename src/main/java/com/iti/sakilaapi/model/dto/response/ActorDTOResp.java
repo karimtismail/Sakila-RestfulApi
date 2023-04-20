@@ -20,13 +20,12 @@ public class ActorDTOResp implements Serializable {
     private Instant lastUpdate;
     private List<Link> links;
 
-    public ActorDTOResp(String firstName, String lastName, Instant lastUpdate) {
+    public ActorDTOResp(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.lastUpdate = lastUpdate;
     }
 
-    public ActorDTOResp(Integer id, String firstName, String lastName, Instant lastUpdate) {
+    public ActorDTOResp(Integer id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

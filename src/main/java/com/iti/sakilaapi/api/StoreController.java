@@ -12,6 +12,7 @@ import java.util.List;
 @Path("stores")
 public class StoreController {
     private final StoreService storeService = new StoreService();
+    private @Context UriInfo uriInfo;
 
     public StoreController() {
     }
@@ -19,7 +20,7 @@ public class StoreController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStoreById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+    public Response getStoreById(@PathParam("id") Integer id) {
         StoreDTOResp storeDTOResp = storeService.findById(id);
         if (storeDTOResp == null) {
             throw new NotFoundException("Store with ID: " + id + " Not Found");
@@ -31,7 +32,7 @@ public class StoreController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllStores(@Context UriInfo uriInfo) {
+    public Response getAllStores() {
         try {
             List<StoreDTOResp> stores = storeService.findAll();
             for (StoreDTOResp store : stores) {
@@ -47,7 +48,7 @@ public class StoreController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteStoreById(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+    public Response deleteStoreById(@PathParam("id") Integer id) {
         StoreDTOResp deletedStoreDto = storeService.deleteById(id);
         if (deletedStoreDto == null) {
             throw new NotFoundException("Store with ID: " + id + " not found");
@@ -60,7 +61,7 @@ public class StoreController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createStore(StoreDTOReq store, @Context UriInfo uriInfo) {
+    public Response createStore(StoreDTOReq store) {
         StoreDTOResp createdStoreDto = storeService.save(store);
         if (createdStoreDto == null) {
             throw new InternalServerErrorException("Failed to create store");
@@ -74,7 +75,7 @@ public class StoreController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateStore(@PathParam("id") Integer id, StoreDTOReq store, @Context UriInfo uriInfo) {
+    public Response updateStore(@PathParam("id") Integer id, StoreDTOReq store) {
         StoreDTOResp updatedStoreDto = storeService.update(id, store);
         if (updatedStoreDto == null) {
             throw new InternalServerErrorException("Failed to update store");

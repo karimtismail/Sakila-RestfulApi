@@ -1,15 +1,11 @@
-//package com.iti.sakilaapi.service;
-//
-//import com.iti.sakilaapi.model.entity.Film;
-//
-//public class FilmService extends BaseService<Film, Short, FilmDto> {
-//    /**
-//     * Constructs a new BaseService instance.
-//     *
-//     * @param entityClass The class of the entity.
-//     * @param dtoClass    The class of the Data Transfer Object.
-//     */
-//    public FilmService(Class<Film> entityClass, Class<FilmDto> dtoClass) {
-//        super(entityClass, dtoClass);
-//    }
-//}
+package com.iti.sakilaapi.service;
+
+import com.iti.sakilaapi.model.dto.requests.FilmDTOReq;
+import com.iti.sakilaapi.model.dto.response.FilmDTOResp;
+import com.iti.sakilaapi.model.entity.Film;
+
+public class FilmService extends BaseService<Film, Integer, FilmDTOReq, FilmDTOResp> {
+    public FilmService() {
+        super(Film.class, FilmDTOReq.class, FilmDTOResp.class);
+    }
+}

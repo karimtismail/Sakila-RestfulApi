@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -12,4 +13,5 @@ import java.io.Serializable;
 public class FilmActorDTOReq implements Serializable {
     private String firstName;
     private String title;
+    private Instant lastUpdate;
 }
