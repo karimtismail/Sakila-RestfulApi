@@ -15,7 +15,14 @@ The project is equipped with a Postman documenter to facilitate API documentatio
 - Java 17
 - Apache Tomcat 10 - Version 10.1.7
 - Apache Maven 3.8.6
+- JAX-RS(Jersey)
+- JSON-B
+- JAX-B
+- Lombok
+- Model Mapper
+- Jakarta persistance (Hibernate)
 - MySQL
+- Postman
 
 ## Installation
 
