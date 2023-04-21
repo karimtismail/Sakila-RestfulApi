@@ -23,6 +23,7 @@ The project is equipped with a Postman documenter to facilitate API documentatio
 - Jakarta persistance (Hibernate)
 - MySQL
 - Postman
+- JUnit5
 
 ## Installation
 
